@@ -1,0 +1,35 @@
+package com.scwcd.controllers;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class PrimeiroController extends HttpServlet{
+
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		
+		System.out.println(config.getInitParameter("initParamServlet"));
+		
+		super.init(config);
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		System.out.println("SERVLET CALL");
+		
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/home");
+		dispatcher.forward(req, resp);
+	}
+	
+}
