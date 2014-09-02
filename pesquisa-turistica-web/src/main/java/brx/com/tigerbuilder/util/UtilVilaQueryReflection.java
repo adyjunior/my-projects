@@ -73,6 +73,20 @@ public class UtilVilaQueryReflection {
 
 		return fieldList;
 	}
+	
+	public static List<String> listColumnsForInsertSqlQuery(Class<?> type) {
+		Field[] fields = type.getDeclaredFields();
+		List<String> fieldList = new ArrayList<String>();
+		
+		for (Field field : fields) {
+			if (isColumn(field) && !isPrimaryKey(field)) {
+				String fieldName = getColumnName(field);
+				fieldList.add(fieldName);
+			}
+		}
+		
+		return fieldList;
+	}
 
 	public static String getTableName(Class<?> type, String alias) {
 		Table table = type.getAnnotation(Table.class);

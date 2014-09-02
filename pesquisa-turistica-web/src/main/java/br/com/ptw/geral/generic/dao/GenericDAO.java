@@ -3,13 +3,19 @@ package br.com.ptw.geral.generic.dao;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import br.com.ptw.geral.generic.model.Entidade;
+import br.com.ptw.util.springjdbc.SpringJdbcUtil;
+import brx.com.tigerbuilder.builder.CreateBuilder;
 
 /**
  * @author Ady Junior - 31/08/2014
  *
  * @param <T>
  */
+@Repository
 public abstract class GenericDAO<T extends Entidade> {
 
 	public T getById(Long id) {
@@ -17,6 +23,10 @@ public abstract class GenericDAO<T extends Entidade> {
 	}
 
 	public void insert(T t) {
+		Class<T> clazz = obterTipoParametrizadoDoObjeto();
+		String sqlInsert = CreateBuilder.newInstance(clazz).toString();
+		Object [] objects = SpringJdbcUtil.getValuesEntityForInsert(t);
+		getJdbcTemplate().update(sqlInsert, objects);
 	}
 
 	public void update(T t) {
@@ -48,6 +58,8 @@ public abstract class GenericDAO<T extends Entidade> {
 
 		return null;
 	}
+	
+	public abstract JdbcTemplate getJdbcTemplate();
 
 	@SuppressWarnings("unchecked")
 	private Class<T> obterTipoParametrizadoDoObjeto() {

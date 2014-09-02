@@ -9,10 +9,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.ptw.geral.generic.dao.GenericDAO;
 import br.com.ptw.module.questionario.model.Question;
 
 @Repository
-public class QuestionDAO {
+public class QuestionDAO extends GenericDAO<Question>{
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -54,6 +55,11 @@ public class QuestionDAO {
 
 	public List<Question> getAll() {
 		return jdbcTemplate.query("sql", new QuestionRowMapper());
+	}
+
+	@Override
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
 	}
 
 }

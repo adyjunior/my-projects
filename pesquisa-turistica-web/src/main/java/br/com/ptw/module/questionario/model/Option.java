@@ -1,16 +1,33 @@
 package br.com.ptw.module.questionario.model;
 
-import java.io.Serializable;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public class Option implements Serializable {
+import br.com.ptw.geral.generic.model.Entidade;
+
+@Table(name = "questionario_option")
+public class Option extends Entidade {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	private Long id;
+	
 	private String description;
 	
+	@ManyToOne
 	private Question question;
+	
+	@ManyToOne
 	private Answer answer;
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getDescription() {
 		return description;
 	}

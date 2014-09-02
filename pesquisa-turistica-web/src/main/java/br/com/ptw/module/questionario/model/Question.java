@@ -1,16 +1,15 @@
 package br.com.ptw.module.questionario.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.com.ptw.geral.generic.model.Entidade;
 import br.com.ptw.module.questionario.enums.QuestionType;
 
 @Table(name="questionario_question")
-public class Question implements Serializable {
+public class Question extends Entidade {
 
 	private static final long serialVersionUID = 1L;
 	

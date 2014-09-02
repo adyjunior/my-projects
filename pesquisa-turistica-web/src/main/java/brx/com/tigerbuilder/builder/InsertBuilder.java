@@ -22,7 +22,7 @@ public class InsertBuilder {
 	}
 
 	public String toString() {
-		List<String> fieldNames = UtilVilaQueryReflection.listColumnsForSqlQuery(type);
+		List<String> fieldNames = UtilVilaQueryReflection.listColumnsForInsertSqlQuery(type);
 		String metaData = UtilVilaQueryReflection.listToStringConcatenated(fieldNames, ", ");
 		String interrogations = UtilVilaQueryReflection.createStringWithInterrogators(fieldNames.size());
 		String tableName = UtilVilaQueryReflection.getTableName(type);
