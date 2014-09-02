@@ -1,0 +1,41 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link href="http://fonts.googleapis.com/css?family=Cookie|Open+Sans:400,700" rel="stylesheet">
+	<link rel="stylesheet" href="menu.css">
+</head>
+<body ng-app ng-controller="MenuController">
+
+<form>
+	<h1>Serviços</h1>
+	
+	<ul>
+		<!-- Percorre o array 'services', atribuindo um manipulador click, e defini ou remove a classe css "active" se necessário -->
+		<li ng-repeat="opcao in opcoesMenu">
+			Opção {{$index+1}}: <span onclick="javascript:location='{{opcao.url}}'">{{ opcao.nome }}</span>
+			
+			<div ng-if="opcoesMenu.length == 2">Teste</div>
+		</li>
+	</ul>
+</form>		
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+<script type="text/javascript">
+	function MenuController ($scope) {
+		$scope.opcoesMenu = [
+		      			{
+		      				nome : "Busca",
+		      				url : "http://localhost:8080/tests-web/pages/angular/search/"
+		      			}, 
+		      			{
+		      				nome : "Busca",
+		      				url : "http://localhost:8080/tests-web/pages/angular/search/"
+		      			} 
+		      		];
+		
+	};
+</script>
+</body>
+</html>
+
+

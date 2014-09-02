@@ -23,6 +23,26 @@
 	<url-pattern>*.show</url-pattern>
 </servlet-mapping>
 
+<servlet>
+	<servlet-name>CookieConfiguration</servlet-name>
+	<servlet-class>com.scwcd.coockies.CookieConfiguration</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>CookieConfiguration</servlet-name>
+	<url-pattern>/coockie-config.do</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>CheckCookie</servlet-name>
+	<servlet-class>com.scwcd.coockies.CheckCookie</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>CheckCookie</servlet-name>
+	<url-pattern>/check-cookie.do</url-pattern>
+</servlet-mapping>
+
 <filter>
 	<filter-name>primeiroFilter</filter-name>
 	<filter-class>com.scwcd.filters.PrimeiroFiltro</filter-class>
@@ -39,6 +59,8 @@
 	<!-- <url-pattern></url-pattern> -->
 </filter-mapping>
 
+
+<!-- 
 <security-constraint>
 	<web-resource-collection>
 		<web-resource-name>test</web-resource-name>
@@ -55,6 +77,7 @@
 <login-config>
 	<auth-method>BASIC</auth-method>
 </login-config>
+ -->
 
 <error-page>
 	<error-code>404</error-code>

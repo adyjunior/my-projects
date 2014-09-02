@@ -28,8 +28,33 @@ public class PrimeiroController extends HttpServlet{
 		System.out.println("SERVLET CALL");
 		
 		
-		RequestDispatcher dispatcher = req.getRequestDispatcher("/home");
-		dispatcher.forward(req, resp);
+		PrintWriter writer = resp.getWriter();
+		
+		writer.append("<table>");
+		writer.append("<thead>");
+		writer.append("<tr>");
+		writer.append("<td>");
+		writer.append("NOME");
+		writer.append("</td>");
+		writer.append("<td>");
+		writer.append("NUMERO");
+		writer.append("</td>");
+		writer.append("</tr>");
+		writer.append("</thead>");
+		writer.append("<tr>");
+		writer.append("<td>");
+		writer.append("");
+		writer.append("</td>");
+		writer.append("<td>");
+		writer.append("NUMERO");
+		writer.append("</td>");
+		writer.append("</tr>");
+		writer.append("</table>");
+		
+		throw new IllegalStateException();
+		
+		//RequestDispatcher dispatcher = req.getRequestDispatcher("/home");
+		//dispatcher.forward(req, resp);
 	}
 	
 }

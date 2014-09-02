@@ -1,0 +1,125 @@
+<html>
+    <meta charset="UTF-8"/>
+    <style>
+		body {
+			font-family: Verdana;
+		}
+		
+		.cssTable {
+			width: 100%;
+			border: solid 1px;
+			text-align: left;
+			border-collapse: collapse;
+		}
+		
+		.cssTable tbody tr {
+			border: solid 1px;
+			height: 30px;
+			cursor: pointer;
+		}
+		
+		.cssTable thead {
+			background: beige;
+		}
+		
+		.cssTable thead th:nth-child(1) {
+			width: 100px;
+		}
+		
+		.cssTable input {
+			color: navy;
+			width: 100%;
+		}
+	</style>
+    
+<head>
+</head>
+<body>
+    <div id="divConteudo">
+        <table id="tabela" class="cssTable">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Preco</th>
+                </tr>
+                <tr>
+                    <th><input type="text" id="txtColuna1"/></th>
+                    <th><input type="text" id="txtColuna2"/></th>
+                    <th><input type="text" id="txtColuna3"/></th>
+                </tr>            
+            </thead>
+            <tbody>
+                <tr>
+                    <td>001.01-A</td>
+                    <td>Spring MVC</td>
+                    <td>5.89</td>
+                </tr>
+                <tr>
+                    <td>001.02-B</td>
+                    <td>VRaptor</td>
+                    <td>5.00</td>
+                </tr>            
+                <tr>
+                    <td>002.10-C</td>
+                    <td>Servlet 3.0</td>
+                    <td>10.0</td>
+                </tr>
+                <tr>
+                    <td>003.12-D</td>
+                    <td>JSF</td>
+                    <td>2.30</td>
+                </tr>
+                <tr>
+                    <td>041.27-E</td>
+                    <td>Spring framework</td>
+                    <td>6.20</td>
+                </tr>        
+                <tr id="trResultado">
+                    <td>Total</td>
+                    <td>=</td>
+                    <td id="tdResultado"></td>
+                </tr>        
+            </tbody>
+        </table>
+        
+    </div>
+    
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $("#tabela input").keyup(function(){
+            var index = $(this).parent().index();
+            var nth = "#tabela td:nth-child("+(index+1).toString()+")";
+            var valor = $(this).val().toUpperCase();
+            $("#tabela tbody tr").show();
+            $(nth).each(function(){
+                if($(this).text().toUpperCase().indexOf(valor) < 0){
+                    $(this).parent().hide();
+                }
+            });
+            
+            var soma = 0;
+            
+            $($('#tabela').find('tr').find('td:last')).each(function(){
+            	if($(this).is(":visible")){
+                	soma += parseFloat($(this).html());            		
+            	}
+            });
+            
+            $('#trResultado').show();
+            $('#tdResultado').html(soma);
+            
+            console.log(soma);
+            
+            $('#tabela').find('tr:first');
+            console.log($('#tabela').find('tr').find('td:last'));
+        });
+
+        $("#tabela input").blur(function(){
+            $(this).val("");
+        });
+    });    
+    </script>
+</body>
+</html>
