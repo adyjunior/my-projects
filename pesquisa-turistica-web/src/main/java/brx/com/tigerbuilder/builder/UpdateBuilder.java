@@ -14,7 +14,8 @@ public class UpdateBuilder {
 
 	private Class<?> type;
 	private String whereClausule;
-
+	private boolean formatter = false;
+	
 	private UpdateBuilder(Class<?> type) {
 		this.type = type;
 	}
@@ -23,15 +24,27 @@ public class UpdateBuilder {
 		UpdateBuilder update = new UpdateBuilder(type);
 		return update;
 	}
+
+	public UpdateBuilder format() {
+		formatter = true;
+		return this;
+	}
 	
-	public void addWhereClausule(String whereClausule) {
+	private String formatter(String query) {
+		return formatter ? query += "\n" : query;
+	}
+	
+	public UpdateBuilder addWhereClausule(String whereClausule) {
 		this.whereClausule = whereClausule;
+		return this;
 	}
 
 	public String toString() {
+		String patternConcat = formatter("=?, ");
+		
 		List<String> fieldNames = UtilVilaQueryReflection.listColumnsForSqlQuery(type);
-		String metaData = UtilVilaQueryReflection.listToStringConcatenated(fieldNames, "=?, ");
-		metaData += metaData + "=?";
+		String metaData = UtilVilaQueryReflection.listToStringConcatenated(fieldNames, patternConcat);
+		metaData  += "=?";
 		String tableName = UtilVilaQueryReflection.getTableName(type);
 
 		StringBuilder query = new StringBuilder();
