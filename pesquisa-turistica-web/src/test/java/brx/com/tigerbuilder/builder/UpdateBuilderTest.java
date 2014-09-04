@@ -12,7 +12,7 @@ public class UpdateBuilderTest {
 
 	@Test
 	public void checkIfUpdateBasicIsWork() {
-		String queryBuilded = UpdateBuilder.newInstance(Usuario.class).toString();
+		String queryBuilded = UpdateBuilder.forClass(Usuario.class).toString();
 		String queryCorrect = "update admin_usuario set id=?, nome=?, login=?, email=?, senha=?, telefone=?, dataNascimento=?, dataCriacao=?, status=?";
 		
 		System.out.println(queryBuilded);
@@ -24,7 +24,7 @@ public class UpdateBuilderTest {
 	
 	@Test
 	public void checkIfUpdateWithTableVinculateIsWork() {
-		String queryBuilded = UpdateBuilder.newInstance(Option.class).toString();
+		String queryBuilded = UpdateBuilder.forClass(Option.class).toString();
 		String queryCorrect = "update questionario_option set id=?, description=?, question_id=?, answer_id=?";
 		
 		System.out.println(queryBuilded);
@@ -36,7 +36,7 @@ public class UpdateBuilderTest {
 	
 	@Test
 	public void checkIfUpdateWithTableVinculateIsWorkInOtherCase() {
-		String queryBuilded = UpdateBuilder.newInstance(Question.class).toString();
+		String queryBuilded = UpdateBuilder.forClass(Question.class).toString();
 		String queryCorrect = "update questionario_question set id=?, title=?, description=?, helpText=?, isRequired=?, form_id=?";
 		
 		System.out.println(queryBuilded);

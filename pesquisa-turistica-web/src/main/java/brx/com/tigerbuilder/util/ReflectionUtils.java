@@ -36,6 +36,11 @@ public class ReflectionUtils {
             }
         }
         return null;
-    }	
-
+    }
+	
+	public static void setValueForAttribute(Object obj, String attributeName, Object value) throws NoSuchFieldException, IllegalAccessException {
+        Field field = obj.getClass().getDeclaredField(attributeName);
+        field.setAccessible(true);
+        field.set(obj, value);
+    }
 }

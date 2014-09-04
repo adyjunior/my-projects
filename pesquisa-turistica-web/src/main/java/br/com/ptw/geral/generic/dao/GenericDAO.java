@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import br.com.ptw.geral.generic.model.Entidade;
+import br.com.ptw.util.NumberUtil;
 import br.com.ptw.util.springjdbc.SpringJdbcUtil;
 import brx.com.tigerbuilder.builder.CreateBuilder;
 import brx.com.tigerbuilder.builder.SelectBuilder;
@@ -21,6 +22,9 @@ import brx.com.tigerbuilder.builder.UpdateBuilder;
 public abstract class GenericDAO<T extends Entidade> {
 
 	public T getById(Long id) {
+		Class<T> clazz = obterTipoParametrizadoDoObjeto();
+		SelectBuilder.forClass(clazz);
+		
 		return null;
 	}
 
@@ -33,7 +37,7 @@ public abstract class GenericDAO<T extends Entidade> {
 
 	public void update(T t) {
 		Class<T> clazz = obterTipoParametrizadoDoObjeto();
-		String sqlUpdate = UpdateBuilder.newInstance(clazz).toString();
+		String sqlUpdate = UpdateBuilder.forClass(clazz).toString();
 		Object [] objects = SpringJdbcUtil.getValuesEntityForUpdate(t);
 		getJdbcTemplate().update(sqlUpdate, objects);
 	}
@@ -41,31 +45,35 @@ public abstract class GenericDAO<T extends Entidade> {
 	public void remover(Long id) {
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<T> listAll() {
 		Class<T> clazz = obterTipoParametrizadoDoObjeto();
-		String sqlUpdate = SelectBuilder.newInstance(clazz).toString();
-		getJdbcTemplate().update(sqlUpdate, objects);
-		return null;
+		String sqlUpdate = SelectBuilder.forClass(clazz).toString();
+		List<T> elements = (List<T>) getJdbcTemplate().query(sqlUpdate, EntityRowMapper.newInstance());
+		return elements;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<T> listWithPagination(Integer numberPage, Integer numberPerPage) {
-		//
-		// Class<T> clazz = this.obterTipoParametrizadoDoObjeto();
-		// Criteria c = this.getCriteria(clazz);
-		//
-		// //Integer qtdElementos = (Integer) consultarQtdElementos(dc);
-		// if(UtilObjeto.ehNumeroNuloOuZero(numberPerPage)){
-		// numberPerPage = 10;
-		// }
-		//
-		// if(UtilObjeto.ehNumeroNuloOuZero(numberPage)){
-		// numberPage = 1;
-		// }
-		//
+		 if(NumberUtil.isNullOrZero(numberPerPage)){
+			 numberPerPage = 10;
+		 }
+		 
+		 if(NumberUtil.isNullOrZero(numberPage)){
+			 numberPage = 1;
+		 }
+		
+		 int limit = numberPerPage;
+		 int offSet = numberPage;
+		 
+		Class<T> clazz = obterTipoParametrizadoDoObjeto();
+		String sqlUpdate = SelectBuilder.forClass(clazz).addLimit(limit, offSet).toString();
+		List<T> elements = (List<T>) getJdbcTemplate().query(sqlUpdate, EntityRowMapper.newInstance());
+		 
 		// c.setFirstResult((numberPage-1) * numberPerPage);
 		// c.setMaxResults(numberPerPage);
 
-		return null;
+		return elements;
 	}
 	
 	public abstract JdbcTemplate getJdbcTemplate();
