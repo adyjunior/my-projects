@@ -59,6 +59,18 @@ public class UtilVilaQueryReflection {
 		collectionTypes.add(TreeMap.class);
 	}
 
+	public static List<Field> listFieldsValidColumnOfEntity(Class<?> type) {
+		Field[] fields = type.getDeclaredFields();
+		List<Field> fieldValid = new ArrayList<Field>();
+		
+		for (Field field : fields) {
+			if (isColumn(field)) {
+				fieldValid.add(field);
+			}
+		}
+		
+		return fieldValid;
+	}
 	public static List<String> listColumnsForSqlQuery(Class<?> type) {
 
 		Field[] fields = type.getDeclaredFields();
@@ -73,18 +85,18 @@ public class UtilVilaQueryReflection {
 
 		return fieldList;
 	}
-	
+
 	public static List<String> listColumnsForInsertSqlQuery(Class<?> type) {
 		Field[] fields = type.getDeclaredFields();
 		List<String> fieldList = new ArrayList<String>();
-		
+
 		for (Field field : fields) {
 			if (isColumn(field) && !isPrimaryKey(field)) {
 				String fieldName = getColumnName(field);
 				fieldList.add(fieldName);
 			}
 		}
-		
+
 		return fieldList;
 	}
 
@@ -107,14 +119,14 @@ public class UtilVilaQueryReflection {
 				tableNameBuilder.append(nameLowerUnderscore);
 			}
 		}
-		
+
 		if (StringUtils.isNotEmpty(alias)) {
 			tableNameBuilder.append(" as ").append(alias);
 		}
 
 		return tableNameBuilder.toString();
 	}
-	
+
 	public static String getTableName(Class<?> type) {
 		return getTableName(type, null);
 	}
@@ -158,7 +170,7 @@ public class UtilVilaQueryReflection {
 	public static String getForeignKeyColumnName(Field field) {
 		Column foreignKey = field.getAnnotation(Column.class);
 		String nameForeignKey = null;
-		
+
 		if (foreignKey != null && StringUtils.isNotBlank(foreignKey.name())) {
 			return foreignKey.name();
 		}
@@ -179,11 +191,11 @@ public class UtilVilaQueryReflection {
 		if (isTrasient(field)) {
 			return false;
 		}
-		
+
 		if (isStatic(field)) {
 			return false;
 		}
-		
+
 		if (isValidColumnType(field)) {
 			return true;
 		}
@@ -191,7 +203,6 @@ public class UtilVilaQueryReflection {
 		if (isForeignKey(field)) {
 			return true;
 		}
-
 
 		return true;
 	}
@@ -230,15 +241,14 @@ public class UtilVilaQueryReflection {
 
 		if (isPrimaryKey(field)) {
 			builder.append(" ").append(CLAUSULE_PRIMARY_KEY);
-		}
-
-		if (isColumnNotNull(field)) {
+			builder.append(" ").append(CLAUSULE_NOT_NULL);
+		} else if (isColumnNotNull(field)) {
 			builder.append(" ").append(CLAUSULE_NOT_NULL);
 		}
 
 		return builder.toString();
 	}
-	
+
 	public static String getColumnSize(Field field) {
 		final String EMPTY_SIZE = "";
 		Column column = field.getAnnotation(Column.class);
@@ -262,7 +272,12 @@ public class UtilVilaQueryReflection {
 		}
 		return false;
 	}
-	
+
+	public static String getPrimaryKeyColumnName(Class<?> type) {
+		Field field = getFieldPrimaryKey(type);
+		return getColumnName(field);
+	}
+
 	public static Field getFieldPrimaryKey(Class<?> type) {
 		Field[] fields = type.getDeclaredFields();
 		for (Field field : fields) {
@@ -272,13 +287,13 @@ public class UtilVilaQueryReflection {
 		}
 		throw new IllegalStateException("Type " + type.getName() + " don't haves PRIMARY KEY.");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<Field> getFieldsWithAnnotation(Class<?> type, Class<? extends Annotation> annotationClass) {
 		return getFieldsWithAnyAnnotation(type, annotationClass);
 	}
-	
-	public static List<Field> getFieldsWithAnyAnnotation(Class<?> type, Class<? extends Annotation> ... annotationsClass) {
+
+	public static List<Field> getFieldsWithAnyAnnotation(Class<?> type, Class<? extends Annotation>... annotationsClass) {
 		Field[] fields = type.getDeclaredFields();
 		List<Field> fieldsWithAnnotation = new ArrayList<Field>();
 		for (Field field : fields) {
@@ -286,14 +301,14 @@ public class UtilVilaQueryReflection {
 				fieldsWithAnnotation.add(field);
 			}
 		}
-		
+
 		return fieldsWithAnnotation;
 	}
-	
+
 	public static boolean isTrasient(Field field) {
 		return fieldContainsAnnotation(field, Transient.class);
 	}
-	
+
 	public static boolean isStatic(Field field) {
 		return Modifier.isStatic(field.getModifiers());
 	}
@@ -311,7 +326,7 @@ public class UtilVilaQueryReflection {
 		Column column = field.getAnnotation(Column.class);
 		return isColumnNotNull(column);
 	}
-	
+
 	private static boolean isColumnNotNull(Column column) {
 		return column != null && !column.nullable();
 	}
@@ -319,8 +334,8 @@ public class UtilVilaQueryReflection {
 	public static boolean fieldContainsAnnotation(Field field, Class<? extends Annotation> annotation) {
 		return field.getAnnotation(annotation) != null;
 	}
-	
-	public static boolean fieldContainsAnyAnnotation(Field field, Class<? extends Annotation> ... annotations) {
+
+	public static boolean fieldContainsAnyAnnotation(Field field, Class<? extends Annotation>... annotations) {
 		for (Class<? extends Annotation> type : annotations) {
 			if (field.getAnnotation(type) != null) {
 				return true;

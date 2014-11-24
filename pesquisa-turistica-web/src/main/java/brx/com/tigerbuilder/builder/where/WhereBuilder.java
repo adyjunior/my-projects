@@ -1,5 +1,8 @@
 package brx.com.tigerbuilder.builder.where;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Ady Junior - 03/09/2014
  *
@@ -8,6 +11,7 @@ public class WhereBuilder {
 
 	private Class<?> type;
 	private boolean formatter = false;
+	private List<String> statemests = new ArrayList<String>();
 
 	private WhereBuilder(Class<?> type) {
 		this.type = type;
@@ -18,7 +22,7 @@ public class WhereBuilder {
 		return update;
 	}
 	
-	private void add(String nome) {
+	private void add(String statement) {
 		
 	}
 	

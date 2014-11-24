@@ -9,13 +9,19 @@ import br.com.ptw.geral.generic.model.Entidade;
 
 public class EntityRowMapper<T extends Entidade> implements RowMapper<T> {
 
-	public static <T extends Entidade> EntityRowMapper<T> newInstance() {
-		return new EntityRowMapper<T>();
+//	public static <T extends Entidade> EntityRowMapper<T> newInstance() {
+//		return new EntityRowMapper<T>();
+//	}
+	private Class<T> clazzOfEntity;
+	
+	public EntityRowMapper(Class<T> clazzOfEntity) {
+		this.clazzOfEntity = clazzOfEntity;
 	}
+	
 
 	public T mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		EntityExtractor<T> extractor = new EntityExtractor<T>();
+		EntityExtractor<T> extractor = new EntityExtractor<T>(clazzOfEntity);
 
 		return extractor.extractData(rs);
 	}

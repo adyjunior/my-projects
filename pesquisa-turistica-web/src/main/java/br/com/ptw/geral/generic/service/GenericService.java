@@ -1,5 +1,7 @@
 package br.com.ptw.geral.generic.service;
 
+import java.util.List;
+
 import br.com.ptw.geral.generic.dao.GenericDAO;
 import br.com.ptw.geral.generic.model.Entidade;
 
@@ -22,6 +24,14 @@ public abstract class GenericService<T extends Entidade> {
 	
 	public void atualizar(T t) {
 		getDao().update(t);
+	}
+	
+	public List<T> listar() {
+		return getDao().listAll();
+	}
+	
+	public List<T> listarComPaginacao(Integer numberPage, Integer numberPerPage) {
+		return getDao().listWithPagination(numberPage, numberPerPage);
 	}
 	
 	public void remover(Long id){

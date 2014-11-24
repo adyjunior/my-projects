@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DataUtil {
+	
+	public static final String DATE_PATTERN_DEFAULT = "yyyy-MM-dd HH-mm-ss";
 
 	public static Date stringToData(String dataStr, String pattern) {
 		Date d = null;

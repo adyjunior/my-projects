@@ -6,4 +6,7 @@ package brx.com.tigerbuilder.builder.where;
  */
 public class Operation {
 
+	
+	
+	
 }

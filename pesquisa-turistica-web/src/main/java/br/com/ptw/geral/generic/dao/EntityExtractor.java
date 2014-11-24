@@ -3,6 +3,7 @@ package br.com.ptw.geral.generic.dao;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -13,14 +14,18 @@ import brx.com.tigerbuilder.util.UtilVilaQueryReflection;
 
 public class EntityExtractor<T extends Entidade> implements ResultSetExtractor<T> {
 
-	@SuppressWarnings("unchecked")
+	private Class<T> clazzOfEntity;
+	
+	public EntityExtractor(Class<T> clazzOfEntity) {
+		this.clazzOfEntity = clazzOfEntity;
+	}
+	
 	public T extractData(ResultSet rs) throws SQLException, DataAccessException {
 		T entidade = null;
 		try {
-			Class<?> clazzOfEntity = ReflectionUtils.getGenericTypeParameter(this.getClass());
 			entidade = (T) clazzOfEntity.newInstance();
 
-			Field[] fields = ReflectionUtils.getGenericTypeParameter(this.getClass()).getDeclaredFields();
+			List<Field> fields = UtilVilaQueryReflection.listFieldsValidColumnOfEntity(clazzOfEntity);
 			for (Field field : fields) {
 				String columnName = UtilVilaQueryReflection.getColumnName(field);
 				Object value = rs.getObject(columnName);
@@ -32,5 +37,5 @@ public class EntityExtractor<T extends Entidade> implements ResultSetExtractor<T
 
 		return entidade;
 	}
-
+	
 }

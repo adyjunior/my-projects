@@ -16,6 +16,8 @@ public class CreateBuilder {
 
 	private Class<?> type;
 	private boolean formatter = false;
+	
+	private String sqlSequence = "";
 
 	private CreateBuilder(Class<?> type) {
 		this.type = type;
@@ -50,10 +52,15 @@ public class CreateBuilder {
 		query.append(scriptColumns);
 		formatter(query);
 		query.append(");");
+		
+		query.append("\n");
+		query.append("\n");
 
 		if (UtilVilaQueryReflection.tableContainsForeignKey(type)) {
 			query.append(createScriptAllForeignKey());
 		}
+		
+		query.append(sqlSequence);
 
 		return query.toString();
 	}
@@ -61,31 +68,69 @@ public class CreateBuilder {
 	@SuppressWarnings("unchecked")
 	private String createScriptAllForeignKey() {
 		List<Field> fields = UtilVilaQueryReflection.getFieldsWithAnyAnnotation(type, ManyToOne.class, OneToOne.class);
-		StringBuilder script = new StringBuilder("\n");
+		StringBuilder script = new StringBuilder();
 
-		int index = 0;
 		for (Field fieldForeignKey : fields) {
-			if(index != 0) {
-				script.append(", ");
-				formatter(script);
-			}
-			
 			script.append(createScriptForeignKey(fieldForeignKey));
-			index++;
 		}
 		
+		script.append("\n");
+		script.append("\n");
 		return script.toString();
 	}
 
+	public CreateBuilder createPostgresSequence() {
+		String tableName = UtilVilaQueryReflection.getTableName(type);
+		String columnPrimaryKey = UtilVilaQueryReflection.getPrimaryKeyColumnName(type);
+		String nameSequence = tableName + "_" + columnPrimaryKey + "_seq";
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("CREATE SEQUENCE ").append(nameSequence).append(" ");
+		formatter(sql);
+		sql.append("INCREMENT 1").append(" ");
+		formatter(sql);
+		sql.append("MINVALUE 1").append(" ");
+		formatter(sql);
+		sql.append("MAXVALUE 9223372036854775807").append(" ");
+		formatter(sql);
+		sql.append("START 1").append(" ");
+		formatter(sql);
+		sql.append("CACHE 1;").append(" ");
+		sql.append("\n");
+		sql.append("\n");
+		
+		sql.append("ALTER TABLE ").append(tableName).append(" ");
+		formatter(sql);
+		sql.append("ALTER COLUMN ").append(columnPrimaryKey).append(" ");
+		formatter(sql);
+		sql.append("SET DEFAULT NEXTVAL('").append(nameSequence).append("'::regclass);");
+		sql.append("\n");
+		
+		sqlSequence = sql.toString();
+		
+		return this;
+	}
+	
 	private String createScriptForeignKey(Field fieldForeignKey) {
+//		ALTER TABLE Orders
+//		ADD CONSTRAINT fk_PerOrders
+//		FOREIGN KEY (P_Id)
+//		REFERENCES Persons(P_Id)
+		
 		StringBuilder script = new StringBuilder();
+		String tableName = UtilVilaQueryReflection.getTableName(type);
 		Field fieldPrimaryKey = UtilVilaQueryReflection.getFieldPrimaryKey(fieldForeignKey.getType());
-		String namePrimaryKey = UtilVilaQueryReflection.getColumnName(fieldPrimaryKey);
+		String primaryKeyName = UtilVilaQueryReflection.getColumnName(fieldPrimaryKey);
+		String foreignKeyColumnName = UtilVilaQueryReflection.getForeignKeyColumnName(fieldForeignKey);
+		String constraintforeignKeyName = "fk_" + foreignKeyColumnName;
+		String tableForeignKeyName = UtilVilaQueryReflection.getTableName(fieldForeignKey.getType());
 
+		script.append("alter table ").append(tableName).append(" ");
+		script.append("add constraint ").append(constraintforeignKeyName).append(" ");
 		script.append("foreign key").append(" (");
-		script.append(UtilVilaQueryReflection.getForeignKeyColumnName(fieldForeignKey)).append(") ");
-		script.append("references ").append(UtilVilaQueryReflection.getTableName(fieldForeignKey.getType()));
-		script.append("(").append(namePrimaryKey).append(")");
+		script.append(foreignKeyColumnName).append(") ");
+		script.append("references ").append(tableForeignKeyName);
+		script.append("(").append(primaryKeyName).append(");\n");
 
 		// FOREIGN KEY (prat_esta_id)REFERENCES estante (esta_id)
 		return script.toString();

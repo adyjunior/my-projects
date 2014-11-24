@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -16,7 +17,7 @@ import br.com.ptw.module.admin.enums.EnumStatusUsuario;
  *
  */
 //@JsonIgnoreProperties(ignoreUnknown = true)
-//@Entity(name="admin_usuario")
+@Entity(name="admin_usuario")
 @Table(name="admin_usuario")
 public class Usuario extends Entidade implements Serializable{
 

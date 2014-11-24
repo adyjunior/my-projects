@@ -1,13 +1,14 @@
 package br.com.ptw.module.questionario.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import br.com.ptw.geral.generic.model.Entidade;
+
 @Table(name="questionario_form")
-public class Form implements Serializable{
+public class Form extends Entidade{
 
 	private static final long serialVersionUID = 1L;
 	
